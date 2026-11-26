@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { SERVERS, type ServerOption } from '@/lib/types';
+import type { ServerOption } from '@/lib/types';
 
 interface ServerSelectorProps {
-  selected: ServerOption;
+  servers: ServerOption[];
+  selected: ServerOption | null;
   onSelect: (server: ServerOption) => void;
 }
 
-export default function ServerSelector({ selected, onSelect }: ServerSelectorProps) {
+export default function ServerSelector({ servers, selected, onSelect }: ServerSelectorProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -17,9 +18,11 @@ export default function ServerSelector({ selected, onSelect }: ServerSelectorPro
         onClick={() => setOpen(true)}
         className="w-full rounded-2xl bg-navy-card border border-navy-border px-4 py-3.5 flex items-center gap-3 hover:border-cyan-glow/40 transition-colors"
       >
-        <span className="text-xl leading-none">{selected.flag}</span>
-        <span className="flex-1 text-left text-sm font-medium text-white">
-          {selected.name} · {selected.location} · {selected.ping} ms
+        <span className="text-xl leading-none">{selected?.flag ?? '🌐'}</span>
+        <span className="flex-1 text-left text-sm font-medium text-white truncate">
+          {selected
+            ? `${selected.name} · ${selected.location}${selected.ping !== undefined ? ` · ${selected.ping} ms` : ''}`
+            : 'No server selected'}
         </span>
         <ChevronDown className="w-4 h-4 text-slate-500" />
       </button>
@@ -30,46 +33,57 @@ export default function ServerSelector({ selected, onSelect }: ServerSelectorPro
           onClick={() => setOpen(false)}
         >
           <div
-            className="fade-in-up w-full max-w-md rounded-t-3xl sm:rounded-3xl bg-navy-card border border-navy-border p-5 pb-8"
+            className="fade-in-up w-full max-w-md rounded-t-3xl sm:rounded-3xl bg-navy-card border border-navy-border p-5 pb-8 max-h-[70vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="w-10 h-1 rounded-full bg-slate-600 mx-auto mb-4" />
             <h3 className="text-white font-bold text-base mb-4">Select Server</h3>
-            <div className="flex flex-col gap-2">
-              {SERVERS.map((server) => (
-                <button
-                  key={server.id}
-                  onClick={() => {
-                    onSelect(server);
-                    setOpen(false);
-                  }}
-                  className={`flex items-center gap-3 rounded-xl border px-4 py-3.5 transition-colors ${
-                    server.id === selected.id
-                      ? 'border-cyan-glow/60 bg-cyan-glow/10'
-                      : 'border-navy-border bg-navy-cardLight hover:border-cyan-glow/30'
-                  }`}
-                >
-                  <span className="text-xl">{server.flag}</span>
-                  <div className="flex-1 text-left">
-                    <div className="text-sm font-semibold text-white">
-                      {server.name} · {server.location}
-                    </div>
-                    <div className="text-xs text-slate-500">
-                      Ping {server.ping} ms · Load {server.load}%
-                    </div>
-                  </div>
-                  <div
-                    className={`h-2 w-2 rounded-full ${
-                      server.load < 40
-                        ? 'bg-emerald-400'
-                        : server.load < 60
-                          ? 'bg-amber-400'
-                          : 'bg-rose-400'
+            {servers.length === 0 ? (
+              <p className="text-sm text-slate-500">No servers available. Tap Update Servers.</p>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {servers.map((server) => (
+                  <button
+                    key={server.id}
+                    onClick={() => {
+                      onSelect(server);
+                      setOpen(false);
+                    }}
+                    className={`flex items-center gap-3 rounded-xl border px-4 py-3.5 transition-colors ${
+                      selected?.id === server.id
+                        ? 'border-cyan-glow/60 bg-cyan-glow/10'
+                        : 'border-navy-border bg-navy-cardLight hover:border-cyan-glow/30'
                     }`}
-                  />
-                </button>
-              ))}
-            </div>
+                  >
+                    <span className="text-xl">{server.flag}</span>
+                    <div className="flex-1 text-left min-w-0">
+                      <div className="text-sm font-semibold text-white truncate">
+                        {server.name} · {server.location}
+                      </div>
+                      <div className="text-xs text-slate-500 truncate">
+                        {[
+                          server.ping !== undefined ? `Ping ${server.ping} ms` : null,
+                          server.load !== undefined ? `Load ${server.load}%` : null,
+                        ]
+                          .filter(Boolean)
+                          .join(' · ') || server.host}
+                      </div>
+                    </div>
+                    {server.load !== undefined && (
+                      <div
+                        className={`h-2 w-2 rounded-full shrink-0 ${
+                          server.load < 40
+                            ? 'bg-emerald-400'
+                            : server.load < 60
+                              ? 'bg-amber-400'
+                              : 'bg-rose-400'
+                        }`}
+                      />
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}

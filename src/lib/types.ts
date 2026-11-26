@@ -1,12 +1,18 @@
-export type ConnectionStatus = 'disconnected' | 'connecting' | 'connected';
+export type VpnStatus = 'disconnected' | 'connecting' | 'connected' | 'disconnecting';
 
 export interface ServerOption {
   id: string;
   name: string;
   location: string;
   flag: string;
-  ping: number;
-  load: number;
+  ping?: number;
+  load?: number;
+  host?: string;
+  port?: string;
+  username?: string;
+  password?: string;
+  ns?: string;
+  publicKey?: string;
 }
 
 export interface NetworkOption {
@@ -27,14 +33,9 @@ export interface SshConfig {
   username: string;
   password: string;
   dns: string;
+  ns: string;
+  publicKey: string;
 }
-
-export const SERVERS: ServerOption[] = [
-  { id: 'sg1', name: 'SG 1', location: 'Singapore', flag: '🇸🇬', ping: 42, load: 34 },
-  { id: 'sg2', name: 'SG 2', location: 'Singapore', flag: '🇸🇬', ping: 55, load: 61 },
-  { id: 'us1', name: 'US 1', location: 'Los Angeles', flag: '🇺🇸', ping: 168, load: 22 },
-  { id: 'jp1', name: 'JP 1', location: 'Tokyo', flag: '🇯🇵', ping: 87, load: 45 },
-];
 
 export const NETWORKS: NetworkOption[] = [
   { id: 'custom', name: 'Custom DNS' },
