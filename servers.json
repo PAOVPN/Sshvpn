@@ -1,0 +1,35 @@
+{
+  "version": "1.0",
+  "servers": [
+    {
+      "id": "sg1",
+      "name": "SG 1",
+      "country": "Singapore",
+      "flag": "🇸🇬",
+      "host": "://example.com",
+      "port": 22,
+      "ns": "://example.com",
+      "pubkey": "00000000000000000000000000000000",
+      "username": "user1",
+      "password": "password1"
+    },
+    {
+      "id": "sg2",
+      "name": "SG 2",
+      "country": "Singapore",
+      "flag": "🇸🇬",
+      "host": "://example.com",
+      "port": 22,
+      "ns": "://example.com",
+      "pubkey": "00000000000000000000000000000000",
+      "username": "user2",
+      "password": "password2"
+    }
+  ],
+  "operators": {
+    "MPT": "1.1.1.1",
+    "Atom": "8.8.8.8",
+    "Ooredoo": "9.9.9.9",
+    "Mytel": "208.67.222.222"
+  }
+}
