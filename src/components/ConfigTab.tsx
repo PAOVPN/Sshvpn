@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Eye, EyeOff, Server, KeyRound, User, Globe, ShieldCheck } from 'lucide-react';
+import { Eye, EyeOff, Server, KeyRound, User, Globe, ShieldCheck, Dns } from 'lucide-react';
 import type { SshConfig } from '@/lib/types';
 
 interface ConfigTabProps {
@@ -11,6 +11,7 @@ const fields = [
   { key: 'host' as const, label: 'SSH HOST', placeholder: 'tunnel.example.com', icon: Server },
   { key: 'port' as const, label: 'PORT', placeholder: '443', icon: ShieldCheck },
   { key: 'username' as const, label: 'USERNAME', placeholder: 'tunnel_user', icon: User },
+  { key: 'ns' as const, label: 'NAMESERVER (NS)', placeholder: 'ns1.tunnel.example.com', icon: Dns },
   { key: 'dns' as const, label: 'DNS SERVER', placeholder: '8.8.8.8', icon: Globe },
 ];
 
@@ -19,7 +20,7 @@ export default function ConfigTab({ config, onChange }: ConfigTabProps) {
 
   return (
     <div className="px-5 py-4 flex flex-col gap-3">
-      <h2 className="text-white font-bold text-base">SSH Configuration</h2>
+      <h2 className="text-white font-bold text-base">SSH / DNSTT Configuration</h2>
       {fields.map(({ key, label, placeholder, icon: Icon }) => (
         <div key={key}>
           <label className="text-[10px] font-semibold tracking-[0.15em] text-slate-500 block mb-1.5">
@@ -58,8 +59,22 @@ export default function ConfigTab({ config, onChange }: ConfigTabProps) {
           </button>
         </div>
       </div>
+      <div>
+        <label className="text-[10px] font-semibold tracking-[0.15em] text-slate-500 block mb-1.5">
+          PUBLIC KEY
+        </label>
+        <div className="relative">
+          <ShieldCheck className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+          <input
+            value={config.publicKey}
+            onChange={(e) => onChange({ ...config, publicKey: e.target.value })}
+            placeholder="ssh-ed25519 AAAA..."
+            className="w-full rounded-xl bg-navy-card border border-navy-border pl-10 pr-4 py-3 text-sm text-white placeholder:text-slate-600 outline-none focus:border-cyan-glow/60 transition-colors"
+          />
+        </div>
+      </div>
       <p className="text-[11px] text-slate-600 leading-relaxed mt-1">
-        Credentials are stored on this device only and used when establishing the tunnel.
+        Values auto-fill from the selected server. Manual edits are kept for the current session.
       </p>
     </div>
   );

@@ -1,18 +1,19 @@
-import { NETWORKS } from '@/lib/types';
+import { NETWORKS, type NetworkOption } from '@/lib/types';
 
 interface NetworkSelectorProps {
+  operators: NetworkOption[];
   selected: string;
   onSelect: (id: string) => void;
 }
 
-export default function NetworkSelector({ selected, onSelect }: NetworkSelectorProps) {
+export default function NetworkSelector({ operators, selected, onSelect }: NetworkSelectorProps) {
   return (
     <div className="px-5 py-2 pb-4">
       <div className="text-[10px] font-semibold tracking-[0.2em] text-slate-500 mb-2">
         NETWORK / OPERATOR
       </div>
       <div className="grid grid-cols-2 gap-2.5">
-        {NETWORKS.map((network) => {
+        {(operators.length > 0 ? operators : NETWORKS).map((network) => {
           const active = network.id === selected;
           return (
             <button
