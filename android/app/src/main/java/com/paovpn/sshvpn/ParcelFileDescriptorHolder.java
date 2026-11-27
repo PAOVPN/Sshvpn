@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class ParcelFileDescriptorHolder {
+    private static ParcelFileDescriptorHolder instance;
     public ParcelFileDescriptor descriptor;
     public FileInputStream in;
     public FileOutputStream out;
@@ -16,6 +17,17 @@ public class ParcelFileDescriptorHolder {
             this.in = new FileInputStream(descriptor.getFileDescriptor());
             this.out = new FileOutputStream(descriptor.getFileDescriptor());
         }
+    }
+
+    public static void set(ParcelFileDescriptor tun) {
+        close();
+        if (tun != null) {
+            instance = new ParcelFileDescriptorHolder(tun);
+        }
+    }
+
+    public static ParcelFileDescriptorHolder get() {
+        return instance;
     }
 
     public int read(byte[] buffer) throws IOException {
@@ -29,11 +41,14 @@ public class ParcelFileDescriptorHolder {
         }
     }
 
-    public void close() {
-        try {
-            if (in != null) in.close();
-            if (out != null) out.close();
-            if (descriptor != null) descriptor.close();
-        } catch (IOException ignored) {}
+    public static void close() {
+        if (instance != null) {
+            try {
+                if (instance.in != null) instance.in.close();
+                if (instance.out != null) instance.out.close();
+                if (instance.descriptor != null) instance.descriptor.close();
+            } catch (IOException ignored) {}
+            instance = null;
+        }
     }
 }
