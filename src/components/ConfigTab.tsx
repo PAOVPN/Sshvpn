@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Eye, EyeOff, Server, KeyRound, User, Globe, ShieldCheck, Dns } from 'lucide-react';
+import { Eye, EyeOff, Server, KeyRound, User, Globe, ShieldCheck, Network } from 'lucide-react';
 import type { SshConfig } from '@/lib/types';
 
 interface ConfigTabProps {
@@ -12,7 +12,7 @@ const fields = [
   { key: 'port' as const, label: 'PORT', placeholder: '443', icon: ShieldCheck },
   { key: 'username' as const, label: 'USERNAME', placeholder: 'tunnel_user', icon: User },
   { key: 'ns' as const, label: 'NAMESERVER (NS)', placeholder: 'ns1.tunnel.example.com', icon: Dns },
-  { key: 'dns' as const, label: 'DNS SERVER', placeholder: '8.8.8.8', icon: Globe },
+  { key: 'dns' as const, label: 'Network SERVER', placeholder: '8.8.8.8', icon: Globe },
 ];
 
 export default function ConfigTab({ config, onChange }: ConfigTabProps) {
